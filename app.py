@@ -1,59 +1,51 @@
 import os
 import openai
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, render_template, request
 from collections import deque
-from instructions import ad_text_gen, image_text_gen
+from openai_utils import *
 
 app = Flask(__name__)
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 message_queue = deque(maxlen = 20)
+image_url_queue = deque(maxlen = 1)
 
 @app.route("/", methods=("GET", "POST"))
 def index():
+        
+        if request.method == "POST":
 
-    # execute when submit button is pressed
+            # Use a single prompt to generate both images and copy to get the flow started
+            queue_copy(request.form["initial_prompt"], message_queue)
+            queue_images(request.form["initial_prompt"], image_url_queue)
+
+            return render_template("editor.html", 
+                                   ad_gen_copy = message_queue[-1]['content'], 
+                                   ad_gen_images = image_url_queue[0])
+
+        return render_template("index.html")
+
+
+@app.route("/editor", methods=("GET", "POST"))
+def editor():
+        
     if request.method == "POST":
 
-        # copy prompt
-        if 'initial_prompt' in request.form:
+        if 'user_copy_prompt' in request.form:
+            # Generate new copy if a non-empty prompt is submitted on the copy form
+            if request.form["user_copy_prompt"] != '':
+                queue_copy(request.form["user_copy_prompt"], message_queue)
 
-            user_copy_prompt = request.form["initial_prompt"]
-            user_image_prompt = request.form["initial_prompt"]
+        if 'user_image_prompt' in request.form:
+            # Generate new images if a non-empty prompt is submitted on the image form
+            if request.form["user_image_prompt"] != '':
+                queue_copy(request.form["user_image_prompt"], image_url_queue)
 
-        # if 'user_copy_prompt' in request.form:
-
-        #     user_copy_prompt = request.form["initial_prompt"]
-
-        message_queue.append({'role': 'user', 'content': user_copy_prompt})
-        completion = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages= ad_text_gen + list(message_queue),
-            max_tokens=200,
-            top_p=1,
-            frequency_penalty=1,
-            presence_penalty=0
-        )
-
-        # image prompt
-        img_result = openai.Image.create(
-            prompt='''
-            {}
-            {}'''.format(image_text_gen, user_image_prompt),
-            n=3,
-            size="1024x1024"
-            )
-
-        message_queue.append({'role': 'assistant', 'content': completion['choices'][0]['message']['content']})
-        image_urls = [item['url'] for item in img_result['data']]
-
-        return redirect(url_for("index", 
-                                ad_gen_copy = message_queue[-1]['content'],
-                                ad_gen_image = image_urls))
+        return render_template("editor.html", 
+                                ad_gen_copy = message_queue[-1]['content'], 
+                                ad_gen_images = image_url_queue[0])
 
     # static page result
-    ad_gen_copy = request.args.get("ad_gen_copy")
-    ad_gen_image = request.args.getlist("ad_gen_image")
-    return render_template("index.html", 
-                           ad_gen_copy = ad_gen_copy, 
-                           ad_gen_image = ad_gen_image)
+    return render_template("editor.html", 
+                           ad_gen_copy = message_queue[-1]['content'], 
+                           ad_gen_images = image_url_queue[0])

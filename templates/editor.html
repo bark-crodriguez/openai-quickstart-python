@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+</head>
+
+<body>
+
+  <img src="{{ url_for('static', filename='mark.jpeg') }}" class="icon" />
+  
+  <h3>AI ad generator</h3>
+
+  <div class="column">
+    <img class="ad_image" src="{{ad_gen_images[0]}}">
+    <img class="ad_image" src="{{ad_gen_images[1]}}">
+    <img class="ad_image" src="{{ad_gen_images[2]}}">
+  </div>
+
+  <div class="result">{{ ad_gen_copy }}</div>
+
+  <form action="/editor" method="post">
+    <input type="text" name="user_copy_prompt" placeholder="Copy edit instructions" />
+    <input type="text" name="user_image_prompt" placeholder="Image regeneration instructions" />
+    <input type="submit" value="Submit" />
+  </form>
+
+</body>

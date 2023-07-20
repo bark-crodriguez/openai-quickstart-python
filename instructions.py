@@ -1,4 +1,4 @@
-ad_text_gen = [{
+fixed_copy_prompt = [{
     "role": "system",
     "content": '''
                     You will provide a brief marketing message promoting Barkbox in response to any prompt. 
@@ -14,6 +14,8 @@ ad_text_gen = [{
                     Each message should start with a tagline/title. You should include fun puns and emojis in your messages. If I 
                     mention facebook, the message should have more personality than if I mention google. facebook messages could 
                     include promotions for free items.
+
+                    Ignore anything I say pertaining to images.
                     '''
 },
     {
@@ -88,9 +90,10 @@ ad_text_gen = [{
 }
 ]
 
-image_text_gen = '''A Barkbox ad image in a very realistic style.
+fixed_image_prompt = '''A Barkbox ad image in a very realistic style.
 It has a dog playing with a squaky toy.
 The entire body of the dog must be visible.
 The dog has to be of a distinct breed.
+The dog should look playful and happy.
 The Barkbox logo appears in the image.
 '''

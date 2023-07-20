@@ -8,26 +8,6 @@
   <img src="{{ url_for('static', filename='mark.jpeg') }}" class="icon" />
   
   <h3>AI ad generator</h3>
-
-  {% if ad_gen_image %}
-  <div class="column">
-    <img class="ad_image" src="{{ad_gen_image[0]}}">
-    <img class="ad_image" src="{{ad_gen_image[1]}}">
-    <img class="ad_image" src="{{ad_gen_image[2]}}">
-  </div>
-  {% endif %}
-
-  {% if ad_gen_copy %}
-  <div class="result">{{ ad_gen_copy }}</div>
-  {% endif %}
-
-  {% if ad_gen_copy or  ad_gen_image %}
-  <form action="/" method="post">
-    <input type="text" name="user_copy_prompt" placeholder="Copy edit instructions" required />
-    <input type="text" name="user_image_prompt" placeholder="Image regeneration instructions" required />
-    <input type="submit" value="Submit" />
-  </form>
-  {% else %}
   <div class="body_text"> 
     The Bark AI ad generator app is a text-to-ad tool. Simply describe your ad idea and the app will provide you
     with a few image ideas and some fine-tuned copy. You can further refine both assets after they are created. You can 
@@ -38,7 +18,6 @@
     <input type="text" name="initial_prompt" placeholder="Describe your ad idea" required />
     <input type="submit" value="Submit" />
   </form>
-  {% endif %}
-
 
 </body>
+
