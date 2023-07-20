@@ -1,6 +1,6 @@
 import os
 import openai
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, session
 from openai_utils import *
 
 app = Flask(__name__)
