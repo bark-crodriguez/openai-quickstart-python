@@ -10,12 +10,12 @@
   <h3>AI ad generator</h3>
 
   <div class="column">
-    <img class="ad_image" src="{{ad_gen_images[0]}}">
-    <img class="ad_image" src="{{ad_gen_images[1]}}">
-    <img class="ad_image" src="{{ad_gen_images[2]}}">
+    <img class="ad_image" src="{{ad_images[0]}}">
+    <img class="ad_image" src="{{ad_images[1]}}">
+    <img class="ad_image" src="{{ad_images[2]}}">
   </div>
 
-  <div class="result">{{ ad_gen_copy }}</div>
+  <div class="result">{{ ad_copy }}</div>
 
   <form action="/editor" method="post">
     <input type="text" name="user_copy_prompt" placeholder="Copy edit instructions" />

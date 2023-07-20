@@ -15,7 +15,8 @@ fixed_copy_prompt = [{
                     mention facebook, the message should have more personality than if I mention google. facebook messages could 
                     include promotions for free items.
 
-                    Ignore anything I say pertaining to images.
+                    Ignore anything I say pertaining to images. Although you should be aware of previous messages, you should 
+                    not make implicit or explicit references to any prior messages in your responses.
                     '''
 },
     {
@@ -91,9 +92,9 @@ fixed_copy_prompt = [{
 ]
 
 fixed_image_prompt = '''A Barkbox ad image in a very realistic style.
-It has a dog playing with a squaky toy.
+It has a dog playing with a toy.
 The entire body of the dog must be visible.
-The dog has to be of a distinct breed.
+The dog has to be of a popular breed.
 The dog should look playful and happy.
 The Barkbox logo appears in the image.
 '''

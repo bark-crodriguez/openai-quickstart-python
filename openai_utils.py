@@ -1,5 +1,6 @@
 import openai
 from instructions import fixed_copy_prompt, fixed_image_prompt
+from collections import deque
 
 
 def get_chat_completion(message_queue):
@@ -38,26 +39,34 @@ def get_image_from_prompt(user_image_prompt):
     return img_result
 
 
-def queue_copy(prompt, message_queue):
+def queue_copy(prompt, message_list):
     '''
     Manages the message_queue by appending to it a complete interaction between the user and the API.
-    Requires both parameters as input, the user message (prompt) and the message queue to manange (message_queue). 
+    Requires both parameters as input, the user message (prompt) and the message list (message_list) to manange 
+    as a queue. 
     '''
+    queue = deque(maxlen = 20)
+    for message in message_list:
+        queue.append(message)
 
-    message_queue.append({'role': 'user', 'content': prompt})
-    completion = get_chat_completion(message_queue)
-    message_queue.append({'role': 'assistant', 'content': completion['choices'][0]['message']['content']})
+    queue.append({'role': 'user', 'content': prompt})
+    completion = get_chat_completion(queue)
+    queue.append({'role': 'assistant', 'content': completion['choices'][0]['message']['content']})
 
-    return message_queue
+    return list(queue)
 
 
-def queue_images(prompt, image_url_queue):
+def queue_images(prompt, image_url_list):
     '''
     Manages the image_url_queue by appending to it a complete interaction between the user and the API.
-    Requires both parameters as input, the user message (prompt) and the image queue to manange (image_url_queue). 
+    Requires both parameters as input, the user message (prompt) and the image url list (image_url_list) to manange as a queue. 
     '''
 
-    img_result = get_image_from_prompt(prompt)
-    image_url_queue.append([item['url'] for item in img_result['data']])
+    queue = deque(maxlen = 5)
+    for url in image_url_list:
+        queue.append(url)
 
-    return image_url_queue
+    img_result = get_image_from_prompt(prompt)
+    queue.append([item['url'] for item in img_result['data']])
+
+    return list(queue)
